@@ -39,11 +39,11 @@ if 'session_metadata' not in st.session_state:
 
 def main():
     """Main Streamlit application."""
-    st.title("🔧 Virtual Engineer")
+    st.title("Virtual Engineer")
     st.markdown("Ask questions about equipment health, fault patterns, and maintenance recommendations.")
     
     # Add sample queries
-    with st.expander("💡 Sample Questions"):
+    with st.expander("Sample Questions"):
         st.markdown("""
         **Equipment Status:**
         - What is the current status of the industrial conveyor?
@@ -75,14 +75,14 @@ def main():
         
         # Connection status indicator
         if api_endpoint and api_endpoint != "https://your-lambda-url.lambda-url.region.on.aws/":
-            st.success("✅ Endpoint configured")
+            st.success("Endpoint configured")
         else:
-            st.warning("⚠️ Configure endpoint above")
+            st.warning("Configure endpoint above")
         
         st.divider()
         
         # Enhanced equipment filter (Task 9: Simple filtering options)
-        st.subheader("🏭 Equipment Filter")
+        st.subheader("Equipment Filter")
         equipment_ids = st.multiselect(
             "Select Equipment",
             options=[
@@ -101,10 +101,10 @@ def main():
         
         # Equipment status summary
         if equipment_ids:
-            st.caption(f"📊 Monitoring {len(equipment_ids)} equipment unit(s)")
+            st.caption(f"Monitoring {len(equipment_ids)} equipment unit(s)")
         
         # Enhanced time range filter (Task 9: Simple filtering options)
-        st.subheader("📅 Time Range")
+        st.subheader("Time Range")
         time_range = st.selectbox(
             "Select Time Range",
             options=["Last 24 hours", "Last 7 days", "Last 30 days", "Last 90 days", "Custom"],
@@ -126,10 +126,10 @@ def main():
             elif (end_date - start_date).days > 365:
                 st.warning("Date range exceeds 1 year - queries may be slow")
             else:
-                st.success(f"✅ {(end_date - start_date).days} days selected")
+                st.success(f"{(end_date - start_date).days} days selected")
         
         # Fault type filter (Task 9: Enhanced filtering)
-        st.subheader("⚠️ Fault Type Filter")
+        st.subheader("Fault Type Filter")
         fault_types = st.multiselect(
             "Focus on Fault Types",
             options=[
@@ -146,12 +146,12 @@ def main():
         )
         
         if fault_types:
-            st.caption(f"🔍 Focusing on {len(fault_types)} fault type(s)")
+            st.caption(f"Focusing on {len(fault_types)} fault type(s)")
         
         st.divider()
         
         # Session management section (Task 9: Simple session management)
-        st.subheader("💬 Session Management")
+        st.subheader("Session Management")
         
         # Session info display
         if st.session_state.session_id:
@@ -194,50 +194,50 @@ def main():
                 start_time = datetime.fromisoformat(st.session_state.session_start_time)
                 duration = datetime.now() - start_time
                 duration_str = f"{duration.seconds // 60}m {duration.seconds % 60}s"
-                st.caption(f"⏱️ Session duration: {duration_str}")
+                st.caption(f"Session duration: {duration_str}")
             except:
-                st.caption("⏱️ Session active")
+                st.caption("Session active")
         
         # Enhanced clear conversation button (Task 9: Create clear conversation button)
         st.markdown("---")
         col1, col2 = st.columns([1, 1])
         
         with col1:
-            if st.button("🗑️ Clear Chat", type="secondary", use_container_width=True):
+            if st.button("Clear Chat", type="secondary", use_container_width=True):
                 if st.session_state.messages:
                     st.session_state.messages = []
                     st.session_state.session_id = str(uuid.uuid4())  # Generate new session ID
                     st.session_state.session_start_time = datetime.now().isoformat()
-                    st.success("✅ Conversation cleared!")
+                    st.success("Conversation cleared!")
                     st.rerun()
                 else:
                     st.info("No messages to clear")
         
         with col2:
-            if st.button("🔄 New Session", type="primary", use_container_width=True):
+            if st.button("New Session", type="primary", use_container_width=True):
                 # Create completely new session (Task 9: Session management)
                 st.session_state.messages = []
                 st.session_state.session_id = str(uuid.uuid4())
                 st.session_state.session_start_time = datetime.now().isoformat()
-                st.success("✅ New session started!")
+                st.success("New session started!")
                 st.rerun()
         
         # Export conversation option
         if st.session_state.messages:
-            if st.button("📥 Export Chat", use_container_width=True):
+            if st.button("Export Chat", use_container_width=True):
                 export_conversation()
         
         st.divider()
         
         # System status and help
-        st.subheader("ℹ️ System Status")
+        st.subheader("System Status")
         
         # Quick system health check
-        if st.button("🔍 Health Check", use_container_width=True):
+        if st.button("Health Check", use_container_width=True):
             perform_health_check(api_endpoint)
         
         # Help and tips
-        with st.expander("💡 Tips & Help"):
+        with st.expander("Tips & Help"):
             st.markdown("""
             **Filtering Tips:**
             - Select specific equipment for focused analysis
@@ -260,16 +260,16 @@ def main():
             st.markdown("---")
             st.caption("**Active Filters:**")
             if equipment_ids:
-                st.caption(f"🏭 Equipment: {', '.join(equipment_ids[:2])}{'...' if len(equipment_ids) > 2 else ''}")
+                st.caption(f"Equipment: {', '.join(equipment_ids[:2])}{'...' if len(equipment_ids) > 2 else ''}")
             if fault_types:
-                st.caption(f"⚠️ Faults: {', '.join(fault_types[:2])}{'...' if len(fault_types) > 2 else ''}")
+                st.caption(f"Faults: {', '.join(fault_types[:2])}{'...' if len(fault_types) > 2 else ''}")
             if time_range != "Last 30 days":
-                st.caption(f"📅 Time: {time_range}")
+                st.caption(f"Time: {time_range}")
     
     # Add system status indicator in main area
     col1, col2, col3 = st.columns([2, 1, 1])
     with col2:
-        if st.button("🔍 Test Connection"):
+        if st.button("Test Connection"):
             with st.spinner("Testing connection..."):
                 test_response = send_query(
                     api_endpoint,
@@ -278,9 +278,9 @@ def main():
                     ""
                 )
                 if test_response:
-                    st.success("✅ Connection successful!")
+                    st.success("Connection successful!")
                 else:
-                    st.error("❌ Connection failed")
+                    st.error("Connection failed")
     
     with col3:
         # Display session info (Requirement 5.6: Session isolation)
@@ -319,30 +319,30 @@ def display_chat_interface(api_endpoint: str, equipment_ids: List[str], time_ran
                     with col2:
                         if "timestamp" in message:
                             timestamp_display = format_timestamp(message["timestamp"])
-                            st.caption(f"🕒 {timestamp_display}")
+                            st.caption(f"{timestamp_display}")
                         if "sessionId" in message and message["sessionId"]:
-                            st.caption(f"📋 Session: {message['sessionId'][-8:]}")
+                            st.caption(f"Session: {message['sessionId'][-8:]}")
                         
                         # Show response time if available (Requirement 5.1: 30-second response)
                         if "response_time" in message:
-                            st.caption(f"⏱️ {message['response_time']:.1f}s")
+                            st.caption(f"{message['response_time']:.1f}s")
                     
                     # Display citations with enhanced formatting (Requirement 5.2: actionable recommendations)
                     if "citations" in message and message["citations"]:
-                        with st.expander("📚 Sources & References", expanded=False):
+                        with st.expander("Sources & References", expanded=False):
                             for i, citation in enumerate(message["citations"], 1):
                                 st.markdown(f"**{i}.** {citation}")
                     
                     # Display any limitations or explanations (Requirement 5.4)
                     if "limitations" in message and message["limitations"]:
-                        with st.expander("ℹ️ Response Limitations", expanded=False):
+                        with st.expander("Response Limitations", expanded=False):
                             st.info(message["limitations"])
                 else:
                     # User message display
                     st.markdown(message["content"])
                     if "timestamp" in message:
                         timestamp_display = format_timestamp(message["timestamp"])
-                        st.caption(f"🕒 {timestamp_display}")
+                        st.caption(f"{timestamp_display}")
     
     # Chat input with enhanced context handling (Requirement 5.3: maintain conversation context)
     if prompt := st.chat_input("Ask about equipment health, fault patterns, or maintenance..."):
@@ -359,14 +359,14 @@ def display_chat_interface(api_endpoint: str, equipment_ids: List[str], time_ran
         # Display user message immediately
         with st.chat_message("user"):
             st.markdown(prompt)
-            st.caption(f"🕒 {format_timestamp(user_timestamp)}")
+            st.caption(f"{format_timestamp(user_timestamp)}")
         
         # Generate and display assistant response with loading indicator
         with st.chat_message("assistant"):
             # Enhanced loading indicator (Task 8: Add simple loading indicator)
             loading_placeholder = st.empty()
             with loading_placeholder:
-                with st.spinner("🔍 Analyzing your query..."):
+                with st.spinner("Analyzing your query..."):
                     # Track response time for Requirement 5.1
                     start_time = datetime.now()
                     
@@ -410,10 +410,10 @@ def display_chat_interface(api_endpoint: str, equipment_ids: List[str], time_ran
                 # Display metadata (Requirement 5.2: specific data points and timestamps)
                 col1, col2 = st.columns([3, 1])
                 with col2:
-                    st.caption(f"🕒 {format_timestamp(timestamp)}")
+                    st.caption(f"{format_timestamp(timestamp)}")
                     if response.get("sessionId"):
-                        st.caption(f"📋 Session: {response['sessionId'][-8:]}")
-                    st.caption(f"⏱️ {response_time:.1f}s")
+                        st.caption(f"Session: {response['sessionId'][-8:]}")
+                    st.caption(f"{response_time:.1f}s")
                 
                 # Add assistant message to chat history with enhanced metadata
                 assistant_message = {
@@ -433,13 +433,13 @@ def display_chat_interface(api_endpoint: str, equipment_ids: List[str], time_ran
                 
                 # Display citations if available
                 if response.get("citations"):
-                    with st.expander("📚 Sources & References", expanded=False):
+                    with st.expander("Sources & References", expanded=False):
                         for i, citation in enumerate(response["citations"], 1):
                             st.markdown(f"**{i}.** {citation}")
                 
                 # Display limitations if any (Requirement 5.4)
                 if response.get("limitations"):
-                    with st.expander("ℹ️ Response Limitations", expanded=False):
+                    with st.expander("Response Limitations", expanded=False):
                         st.info(response["limitations"])
                         
                         # Show suggested actions if available (Task 9: Enhanced user feedback)
@@ -450,10 +450,10 @@ def display_chat_interface(api_endpoint: str, equipment_ids: List[str], time_ran
                 
                 # Add user feedback collection (Task 9: Enhanced user feedback)
                 if response_content and not response.get("error_type"):
-                    with st.expander("📝 Rate this response", expanded=False):
+                    with st.expander("Rate this response", expanded=False):
                         col1, col2, col3 = st.columns(3)
                         with col1:
-                            if st.button("👍 Helpful", key=f"helpful_{len(st.session_state.messages)}"):
+                            if st.button("Helpful", key=f"helpful_{len(st.session_state.messages)}"):
                                 st.success("Thank you for your feedback!")
                                 # Store feedback in session state for analytics
                                 if 'feedback' not in st.session_state:
@@ -465,7 +465,7 @@ def display_chat_interface(api_endpoint: str, equipment_ids: List[str], time_ran
                                     "session_id": st.session_state.session_id
                                 })
                         with col2:
-                            if st.button("👎 Not helpful", key=f"not_helpful_{len(st.session_state.messages)}"):
+                            if st.button("Not helpful", key=f"not_helpful_{len(st.session_state.messages)}"):
                                 st.info("Thank you for your feedback. We'll work to improve!")
                                 if 'feedback' not in st.session_state:
                                     st.session_state.feedback = []
@@ -476,7 +476,7 @@ def display_chat_interface(api_endpoint: str, equipment_ids: List[str], time_ran
                                     "session_id": st.session_state.session_id
                                 })
                         with col3:
-                            if st.button("🔄 Retry", key=f"retry_{len(st.session_state.messages)}"):
+                            if st.button("Retry", key=f"retry_{len(st.session_state.messages)}"):
                                 # Remove the last assistant message and retry
                                 if st.session_state.messages and st.session_state.messages[-1]["role"] == "assistant":
                                     st.session_state.messages.pop()
@@ -497,23 +497,23 @@ def display_chat_interface(api_endpoint: str, equipment_ids: List[str], time_ran
                 with st.expander("🔧 Troubleshooting Steps", expanded=True):
                     st.markdown("""
                     **Try these steps:**
-                    1. ✅ Check if the API endpoint is correctly configured in the sidebar
-                    2. 🔄 Click 'Health Check' in the sidebar to test connectivity
-                    3. 🗑️ Try clearing the conversation and starting fresh
-                    4. 📝 Rephrase your question using simpler terms
-                    5. ⏱️ Wait a moment and try again (system may be busy)
+                    1. Check if the API endpoint is correctly configured in the sidebar
+                    2. Click 'Health Check' in the sidebar to test connectivity
+                    3. Try clearing the conversation and starting fresh
+                    4. Rephrase your question using simpler terms
+                    5. Wait a moment and try again (system may be busy)
                     """)
                     
                     # Quick action buttons for error recovery
                     col1, col2, col3 = st.columns(3)
                     with col1:
-                        if st.button("🔄 Retry Query", key="retry_query"):
+                        if st.button("Retry Query", key="retry_query"):
                             st.rerun()
                     with col2:
-                        if st.button("🔍 Health Check", key="error_health_check"):
+                        if st.button("Health Check", key="error_health_check"):
                             perform_health_check(api_endpoint)
                     with col3:
-                        if st.button("🗑️ Clear & Restart", key="error_clear"):
+                        if st.button("Clear & Restart", key="error_clear"):
                             st.session_state.messages = []
                             st.session_state.session_id = str(uuid.uuid4())
                             st.session_state.session_start_time = datetime.now().isoformat()
@@ -624,14 +624,14 @@ def export_conversation():
         
         # Offer download
         st.download_button(
-            label="📥 Download Conversation",
+            label="Download Conversation",
             data=export_json,
             file_name=f"maintenance_chat_{st.session_state.session_id[-8:]}_{datetime.now().strftime('%Y%m%d_%H%M')}.json",
             mime="application/json",
             help="Download conversation as JSON file"
         )
         
-        st.success("✅ Conversation ready for download!")
+        st.success("Conversation ready for download!")
         
     except Exception as e:
         st.error(f"Export failed: {str(e)}")
@@ -640,7 +640,7 @@ def perform_health_check(api_endpoint: str):
     """Perform system health check (Task 9: Basic error handling and user feedback)."""
     try:
         if not api_endpoint or api_endpoint == "https://your-lambda-url.lambda-url.region.on.aws/":
-            st.error("❌ No API endpoint configured")
+            st.error("No API endpoint configured")
             return
         
         with st.spinner("Checking system health..."):
@@ -662,7 +662,7 @@ def perform_health_check(api_endpoint: str):
             response_time = (end_time - start_time).total_seconds()
             
             if response.status_code == 200:
-                st.success(f"✅ System healthy (Response: {response_time:.2f}s)")
+                st.success(f"System healthy (Response: {response_time:.2f}s)")
                 
                 # Show additional health metrics
                 col1, col2, col3 = st.columns(3)
