@@ -64,7 +64,7 @@ def main():
     
     # Enhanced sidebar for filtering options (Task 9: Add sidebar for simple filtering options)
     with st.sidebar:
-        st.header("🔧 Configuration")
+        st.header("Configuration")
         
         # API endpoint configuration with validation
         api_endpoint = st.text_input(
