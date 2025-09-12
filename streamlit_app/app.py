@@ -39,7 +39,7 @@ if 'session_metadata' not in st.session_state:
 
 def main():
     """Main Streamlit application."""
-    st.title("🔧 Maintenance Agent")
+    st.title("🔧 Virtual Engineer")
     st.markdown("Ask questions about equipment health, fault patterns, and maintenance recommendations.")
     
     # Add sample queries
