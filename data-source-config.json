@@ -1,0 +1,9 @@
+{
+  "type": "S3",
+  "s3Configuration": {
+    "bucketArn": "arn:aws:s3:::relu-quicksight",
+    "inclusionPrefixes": [
+      "bedrock-recommendations/analytics/"
+    ]
+  }
+}

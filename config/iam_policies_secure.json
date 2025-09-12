@@ -1,0 +1,224 @@
+{
+  "lambda_execution_policy": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        "Resource": [
+          "arn:aws:logs:us-west-2:123456789012:log-group:/aws/lambda/bedrock-agent-query-handler",
+          "arn:aws:logs:us-west-2:123456789012:log-group:/aws/lambda/bedrock-agent-query-handler:*"
+        ],
+        "Condition": {
+          "StringEquals": {
+            "aws:RequestedRegion": "us-west-2"
+          }
+        }
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "bedrock:InvokeAgent"
+        ],
+        "Resource": "arn:aws:bedrock:us-west-2:123456789012:agent/GMJGK6RO4S",
+        "Condition": {
+          "StringEquals": {
+            "bedrock:knowledgeBaseId": "ZRE5Y0KEVD",
+            "aws:RequestedRegion": "us-west-2"
+          }
+        }
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "bedrock:Retrieve"
+        ],
+        "Resource": "arn:aws:bedrock:us-west-2:123456789012:knowledge-base/ZRE5Y0KEVD",
+        "Condition": {
+          "StringEquals": {
+            "aws:RequestedRegion": "us-west-2"
+          }
+        }
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "s3:GetObject"
+        ],
+        "Resource": "arn:aws:s3:::relu-quicksight/bedrock-recommendations/analytics/*",
+        "Condition": {
+          "StringEquals": {
+            "s3:ExistingObjectTag/Environment": "production"
+          },
+          "DateGreaterThan": {
+            "s3:ExistingObjectTag/CreatedDate": "2024-01-01"
+          }
+        }
+      }
+    ]
+  },
+  "bedrock_agent_policy": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "bedrock:Retrieve"
+        ],
+        "Resource": "arn:aws:bedrock:us-west-2:123456789012:knowledge-base/ZRE5Y0KEVD",
+        "Condition": {
+          "StringEquals": {
+            "aws:RequestedRegion": "us-west-2"
+          }
+        }
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "bedrock:InvokeModel"
+        ],
+        "Resource": "arn:aws:bedrock:us-west-2::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0",
+        "Condition": {
+          "StringEquals": {
+            "aws:RequestedRegion": "us-west-2"
+          }
+        }
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        "Resource": [
+          "arn:aws:logs:us-west-2:123456789012:log-group:/aws/bedrock/agents/GMJGK6RO4S",
+          "arn:aws:logs:us-west-2:123456789012:log-group:/aws/bedrock/agents/GMJGK6RO4S:*"
+        ]
+      }
+    ]
+  },
+  "knowledge_base_policy": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "s3:GetObject"
+        ],
+        "Resource": "arn:aws:s3:::relu-quicksight/bedrock-recommendations/analytics/*",
+        "Condition": {
+          "StringEquals": {
+            "s3:ExistingObjectTag/Environment": "production"
+          }
+        }
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "s3:ListBucket"
+        ],
+        "Resource": "arn:aws:s3:::relu-quicksight",
+        "Condition": {
+          "StringLike": {
+            "s3:prefix": "bedrock-recommendations/analytics/*"
+          }
+        }
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "aoss:APIAccessAll"
+        ],
+        "Resource": "arn:aws:aoss:us-west-2:123456789012:collection/bedrock-knowledge-base-default-collection",
+        "Condition": {
+          "StringEquals": {
+            "aoss:collection-name": "bedrock-knowledge-base-default-collection"
+          }
+        }
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "bedrock:InvokeModel"
+        ],
+        "Resource": "arn:aws:bedrock:us-west-2::foundation-model/amazon.titan-embed-text-v1",
+        "Condition": {
+          "StringEquals": {
+            "aws:RequestedRegion": "us-west-2"
+          }
+        }
+      }
+    ]
+  },
+  "session_manager_policy": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        "Resource": [
+          "arn:aws:logs:us-west-2:123456789012:log-group:/aws/lambda/bedrock-agent-session-manager",
+          "arn:aws:logs:us-west-2:123456789012:log-group:/aws/lambda/bedrock-agent-session-manager:*"
+        ]
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:DeleteItem",
+          "dynamodb:Query"
+        ],
+        "Resource": "arn:aws:dynamodb:us-west-2:123456789012:table/bedrock-agent-sessions",
+        "Condition": {
+          "ForAllValues:StringEquals": {
+            "dynamodb:LeadingKeys": ["${aws:userid}"]
+          }
+        }
+      }
+    ]
+  },
+  "health_check_policy": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        "Resource": [
+          "arn:aws:logs:us-west-2:123456789012:log-group:/aws/lambda/bedrock-agent-health-check",
+          "arn:aws:logs:us-west-2:123456789012:log-group:/aws/lambda/bedrock-agent-health-check:*"
+        ]
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "bedrock:GetAgent",
+          "bedrock:GetKnowledgeBase"
+        ],
+        "Resource": [
+          "arn:aws:bedrock:us-west-2:123456789012:agent/GMJGK6RO4S",
+          "arn:aws:bedrock:us-west-2:123456789012:knowledge-base/ZRE5Y0KEVD"
+        ],
+        "Condition": {
+          "StringEquals": {
+            "aws:RequestedRegion": "us-west-2"
+          }
+        }
+      }
+    ]
+  }
+}

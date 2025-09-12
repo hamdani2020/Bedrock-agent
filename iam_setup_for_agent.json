@@ -1,0 +1,129 @@
+{
+  "knowledge_base_role": {
+    "role_name": "AmazonBedrockExecutionRoleForKnowledgeBase_equipment-fault-knowledge-base",
+    "trust_policy": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "bedrock.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+      ]
+    },
+    "permissions_policy": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3:GetObject",
+            "s3:ListBucket"
+          ],
+          "Resource": [
+            "arn:aws:s3:::relu-quicksight",
+            "arn:aws:s3:::relu-quicksight/*"
+          ]
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "bedrock:InvokeModel"
+          ],
+          "Resource": "arn:aws:bedrock:eu-west-1::foundation-model/amazon.titan-embed-text-v1"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "aoss:APIAccessAll"
+          ],
+          "Resource": "arn:aws:aoss:eu-west-1:315990007223:collection/*"
+        }
+      ]
+    }
+  },
+  
+  "agent_role": {
+    "role_name": "AmazonBedrockExecutionRoleForAgents_industrial-equipment-expert",
+    "trust_policy": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "bedrock.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+      ]
+    },
+    "permissions_policy": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "bedrock:InvokeModel"
+          ],
+          "Resource": "arn:aws:bedrock:eu-west-1::foundation-model/anthropic.claude-3-haiku-20240307-v1:0"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "bedrock:Retrieve"
+          ],
+          "Resource": "arn:aws:bedrock:eu-west-1:315990007223:knowledge-base/*"
+        }
+      ]
+    }
+  },
+  
+  "opensearch_collection": {
+    "collection_name": "equipment-fault-knowledge-base",
+    "description": "OpenSearch Serverless collection for equipment fault knowledge base",
+    "type": "VECTORSEARCH",
+    "security_policy": {
+      "Rules": [
+        {
+          "ResourceType": "collection",
+          "Resource": ["collection/equipment-fault-knowledge-base"],
+          "Permission": [
+            "aoss:CreateCollectionItems",
+            "aoss:DeleteCollectionItems", 
+            "aoss:UpdateCollectionItems",
+            "aoss:DescribeCollectionItems"
+          ]
+        },
+        {
+          "ResourceType": "index",
+          "Resource": ["index/equipment-fault-knowledge-base/*"],
+          "Permission": [
+            "aoss:CreateIndex",
+            "aoss:DeleteIndex",
+            "aoss:UpdateIndex",
+            "aoss:DescribeIndex",
+            "aoss:ReadDocument",
+            "aoss:WriteDocument"
+          ]
+        }
+      ]
+    }
+  },
+  
+  "setup_commands": [
+    "# 1. Create IAM Roles (run in AWS CLI or CloudFormation)",
+    "aws iam create-role --role-name AmazonBedrockExecutionRoleForKnowledgeBase_equipment-fault-knowledge-base --assume-role-policy-document file://kb-trust-policy.json",
+    "aws iam put-role-policy --role-name AmazonBedrockExecutionRoleForKnowledgeBase_equipment-fault-knowledge-base --policy-name KnowledgeBasePolicy --policy-document file://kb-permissions.json",
+    "",
+    "aws iam create-role --role-name AmazonBedrockExecutionRoleForAgents_industrial-equipment-expert --assume-role-policy-document file://agent-trust-policy.json", 
+    "aws iam put-role-policy --role-name AmazonBedrockExecutionRoleForAgents_industrial-equipment-expert --policy-name AgentPolicy --policy-document file://agent-permissions.json",
+    "",
+    "# 2. Create OpenSearch Serverless Collection",
+    "aws opensearchserverless create-collection --name equipment-fault-knowledge-base --type VECTORSEARCH --description 'Knowledge base for equipment fault data'",
+    "",
+    "# 3. Run the Python setup script",
+    "python bedrock_agent_setup.py"
+  ]
+}

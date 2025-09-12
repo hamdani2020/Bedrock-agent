@@ -1,0 +1,158 @@
+{
+  "project_name": "bedrock-agent-maintenance",
+  "region": "us-west-2",
+  "lambda_functions": {
+    "query_handler": {
+      "function_name": "bedrock-agent-query-handler",
+      "runtime": "python3.11",
+      "timeout": 300,
+      "memory_size": 512,
+      "environment_variables": {
+        "BEDROCK_AGENT_ID": "GMJGK6RO4S",
+        "BEDROCK_AGENT_ALIAS_ID": "RUWFC5DRPQ",
+        "LOG_LEVEL": "INFO",
+        "NEW_KNOWLEDGE_BASE_ID": "ZECQSVPQJZ"
+      },
+      "function_url": {
+        "auth_type": "NONE",
+        "cors": {
+          "allow_credentials": false,
+          "allow_headers": [
+            "content-type",
+            "x-amz-date",
+            "authorization",
+            "x-api-key",
+            "x-amz-security-token"
+          ],
+          "allow_methods": [
+            "POST",
+            "OPTIONS"
+          ],
+          "allow_origins": [
+            "https://localhost:8501",
+            "https://*.streamlit.app",
+            "https://*.herokuapp.com"
+          ],
+          "max_age": 300
+        }
+      }
+    },
+    "session_manager": {
+      "function_name": "bedrock-agent-session-manager",
+      "runtime": "python3.11",
+      "timeout": 60,
+      "memory_size": 256,
+      "environment_variables": {
+        "DYNAMODB_TABLE_NAME": "",
+        "LOG_LEVEL": "INFO"
+      },
+      "function_url": {
+        "auth_type": "AWS_IAM",
+        "cors": {
+          "allow_credentials": true,
+          "allow_headers": [
+            "content-type",
+            "authorization",
+            "x-amz-date",
+            "x-amz-security-token"
+          ],
+          "allow_methods": [
+            "GET",
+            "POST",
+            "DELETE",
+            "OPTIONS"
+          ],
+          "allow_origins": [
+            "https://localhost:8501",
+            "https://*.streamlit.app",
+            "https://*.herokuapp.com"
+          ],
+          "max_age": 300
+        }
+      }
+    },
+    "data_sync": {
+      "function_name": "bedrock-agent-data-sync",
+      "runtime": "python3.11",
+      "timeout": 900,
+      "memory_size": 1024,
+      "environment_variables": {
+        "KNOWLEDGE_BASE_ID": "ZRE5Y0KEVD",
+        "DATA_SOURCE_ID": "9YZSKP1ODT",
+        "S3_BUCKET_NAME": "relu-quicksight",
+        "S3_DATA_PREFIX": "bedrock-recommendations/analytics/",
+        "LOG_LEVEL": "INFO"
+      }
+    },
+    "health_check": {
+      "function_name": "bedrock-agent-health-check",
+      "runtime": "python3.11",
+      "timeout": 30,
+      "memory_size": 128,
+      "environment_variables": {
+        "BEDROCK_AGENT_ID": "GMJGK6RO4S",
+        "KNOWLEDGE_BASE_ID": "ZRE5Y0KEVD",
+        "LOG_LEVEL": "INFO"
+      },
+      "function_url": {
+        "auth_type": "NONE",
+        "cors": {
+          "allow_credentials": false,
+          "allow_headers": [
+            "content-type"
+          ],
+          "allow_methods": [
+            "GET",
+            "OPTIONS"
+          ],
+          "allow_origins": [
+            "*"
+          ],
+          "max_age": 86400
+        }
+      }
+    }
+  },
+  "bedrock": {
+    "knowledge_base": {
+      "name": "maintenance-fault-kb",
+      "description": "Knowledge base for historical equipment fault prediction data",
+      "foundation_model": "amazon.titan-embed-text-v1",
+      "chunking_strategy": {
+        "chunking_strategy": "FIXED_SIZE",
+        "fixed_size_chunking_configuration": {
+          "max_tokens": 300,
+          "overlap_percentage": 20
+        }
+      }
+    },
+    "agent": {
+      "name": "maintenance-expert",
+      "description": "AI maintenance expert for equipment fault analysis and recommendations",
+      "foundation_model": "anthropic.claude-3-sonnet-20240229-v1:0",
+      "instruction": "You are an expert maintenance engineer with deep knowledge of industrial equipment. Analyze fault prediction data, identify patterns, and provide actionable maintenance recommendations. Always cite your sources and explain your reasoning."
+    }
+  },
+  "s3": {
+    "data_bucket": {
+      "name": "relu-quicksight",
+      "versioning": true,
+      "encryption": "AES256",
+      "data_structure": {
+        "base_prefix": "bedrock-recommendations/analytics/",
+        "path_pattern": "YYYY/MM/DD/analytics_YYYYMMDD_HHMMSS_microseconds.json",
+        "description": "Analytics data organized by date with timestamped JSON files"
+      }
+    }
+  },
+  "iam": {
+    "lambda_execution_role": "bedrock-agent-lambda-execution-role",
+    "bedrock_agent_role": "bedrock-agent-service-role",
+    "knowledge_base_role": "bedrock-knowledge-base-role"
+  },
+  "knowledge_base_id": "ZRE5Y0KEVD",
+  "data_source_id": "9YZSKP1ODT",
+  "text_data_source_id": "BJ4W4EHDCM",
+  "new_knowledge_base_id": "ZECQSVPQJZ",
+  "new_knowledge_base_name": "knowledge-base-conveyor-inference"
+}

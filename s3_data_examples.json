@@ -1,0 +1,168 @@
+{
+  "s3_storage_structure": {
+    "bucket": "relu-quicksight",
+    "folders": {
+      "analytics": "s3://relu-quicksight/bedrock-recommendations/analytics/YYYY/MM/DD/",
+      "detailed": "s3://relu-quicksight/bedrock-recommendations/detailed/YYYY/MM/DD/HH/"
+    }
+  },
+  
+  "analytics_record_example": {
+    "file_path": "s3://relu-quicksight/bedrock-recommendations/analytics/2025/09/11/analytics_20250911_143052_123456.json",
+    "description": "Flattened data optimized for QuickSight visualization and analysis",
+    "content": {
+      "timestamp": "2025-09-11T14:30:52.123456",
+      "date": "2025-09-11",
+      "hour": 14,
+      "day_of_week": "Thursday",
+      "month": "2025-09",
+      "year": 2025,
+      
+      "equipment_type": "industrial_conveyor",
+      "inference_id": "fault_pred_20250911_143052_123456",
+      
+      "speed_rpm": 117.3,
+      "load_units": 512.9,
+      "current_amps": 3.21,
+      "temperature_celsius": 39.59,
+      "vibration_mms": 2.85,
+      
+      "predicted_fault": "Ball Bearing Fault",
+      "fault_category": "BEARING",
+      "confidence_score": null,
+      "confidence_category": "NOT_PROVIDED",
+      
+      "is_normal_operation": 0,
+      "is_critical_fault": 1,
+      "requires_immediate_action": 1,
+      
+      "speed_status": "NORMAL",
+      "load_status": "NORMAL",
+      "current_status": "NORMAL",
+      "temperature_status": "NORMAL",
+      "vibration_status": "CRITICAL",
+      
+      "recommendation_id": "rec_20250911_143052_123456",
+      "risk_level": "HIGH",
+      "risk_score": 3,
+      "recommendation_summary": "Ball bearing failure detected. Immediate replacement required to prevent catastrophic system failure.",
+      "action_items_count": 4,
+      "model_used": "anthropic.claude-3-5-haiku-20241022-v1:0",
+      
+      "processing_time_ms": 1250.5,
+      "record_type": "analytics"
+    }
+  },
+  
+  "detailed_record_example": {
+    "file_path": "s3://relu-quicksight/bedrock-recommendations/detailed/2025/09/11/14/detailed_20250911_143052_123456.json",
+    "description": "Complete nested data with full AI recommendation details for audit trail",
+    "content": {
+      "inference_data": {
+        "inference_id": "fault_pred_20250911_143052_123456",
+        "timestamp": "2025-09-11T14:30:52.123456",
+        "original_timestamp": null,
+        "sensor_data": {
+          "speed": 117.3,
+          "load": 512.9,
+          "current": 3.21,
+          "temperature": 39.59,
+          "vibration": 2.85
+        },
+        "prediction": "Ball Bearing Fault",
+        "confidence": null,
+        "equipment_type": "industrial_conveyor",
+        "processing_stage": "inference_complete"
+      },
+      "bedrock_recommendation": {
+        "raw_response": "Based on the sensor data analysis, I can see clear indicators of ball bearing failure:\n\n1. SUMMARY: Critical ball bearing fault detected with extremely high vibration readings (2.85 mm/s) indicating imminent bearing failure. The equipment is operating at normal speed and load, but the excessive vibration poses immediate risk of catastrophic failure.\n\n2. RISK ASSESSMENT: HIGH - The vibration level of 2.85 mm/s is well above normal operating range (0.1-1.0 mm/s) and indicates advanced bearing wear. Combined with the ML prediction of Ball Bearing Fault, this requires immediate attention.\n\n3. RECOMMENDATIONS:\n- Immediately schedule equipment shutdown for bearing inspection\n- Replace ball bearings in the affected assembly\n- Check bearing lubrication system for contamination or inadequate supply\n- Inspect shaft alignment and coupling condition\n- Verify proper bearing installation torque specifications\n\n4. PRIORITY ACTIONS: \n- IMMEDIATE: Reduce operating speed to minimize further damage\n- WITHIN 4 HOURS: Complete bearing replacement\n- POST-REPAIR: Conduct vibration analysis to verify repair effectiveness\n\n5. ESTIMATED TIMELINE: Immediate action required - equipment should be shut down within 2 hours to prevent catastrophic failure and potential safety hazards.",
+        "summary": "Critical ball bearing fault detected with extremely high vibration readings indicating imminent bearing failure requiring immediate shutdown and replacement.",
+        "action_items": [
+          "Immediately schedule equipment shutdown for bearing inspection",
+          "Replace ball bearings in the affected assembly", 
+          "Check bearing lubrication system for contamination or inadequate supply",
+          "Inspect shaft alignment and coupling condition"
+        ],
+        "risk_level": "HIGH",
+        "timestamp": "2025-09-11T14:30:53.456789",
+        "model_used": "anthropic.claude-3-5-haiku-20241022-v1:0",
+        "inference_id": "fault_pred_20250911_143052_123456"
+      },
+      "processing_metadata": {
+        "processed_at": "2025-09-11T14:30:53.456789",
+        "lambda_function": "inference_to_bedrock_lambda",
+        "version": "1.0",
+        "record_type": "detailed"
+      }
+    }
+  },
+  
+  "normal_operation_example": {
+    "file_path": "s3://relu-quicksight/bedrock-recommendations/analytics/2025/09/11/analytics_20250911_150000_789012.json",
+    "description": "Example of normal operation data for comparison",
+    "content": {
+      "timestamp": "2025-09-11T15:00:00.789012",
+      "date": "2025-09-11",
+      "hour": 15,
+      "day_of_week": "Thursday",
+      "month": "2025-09",
+      "year": 2025,
+      
+      "equipment_type": "industrial_conveyor",
+      "inference_id": "fault_pred_20250911_150000_789012",
+      
+      "speed_rpm": 125.6,
+      "load_units": 456.2,
+      "current_amps": 3.45,
+      "temperature_celsius": 28.7,
+      "vibration_mms": 0.34,
+      
+      "predicted_fault": "Normal Operation",
+      "fault_category": "NORMAL",
+      "confidence_score": null,
+      "confidence_category": "NOT_PROVIDED",
+      
+      "is_normal_operation": 1,
+      "is_critical_fault": 0,
+      "requires_immediate_action": 0,
+      
+      "speed_status": "NORMAL",
+      "load_status": "NORMAL", 
+      "current_status": "NORMAL",
+      "temperature_status": "NORMAL",
+      "vibration_status": "NORMAL",
+      
+      "recommendation_id": "rec_20250911_150000_789012",
+      "risk_level": "LOW",
+      "risk_score": 1,
+      "recommendation_summary": "System operating within normal parameters. Continue regular monitoring and preventive maintenance schedule.",
+      "action_items_count": 2,
+      "model_used": "anthropic.claude-3-5-haiku-20241022-v1:0",
+      
+      "processing_time_ms": 890.2,
+      "record_type": "analytics"
+    }
+  },
+  
+  "quicksight_usage": {
+    "data_source": "s3://relu-quicksight/bedrock-recommendations/analytics/",
+    "file_format": "JSON",
+    "key_fields_for_visualization": [
+      "timestamp - for time series charts",
+      "predicted_fault - for fault distribution",
+      "fault_category - for grouping similar faults", 
+      "risk_level - for risk monitoring",
+      "vibration_mms - for trend analysis",
+      "temperature_celsius - for overheating detection",
+      "is_critical_fault - for alert filtering",
+      "requires_immediate_action - for priority alerts"
+    ],
+    "suggested_charts": [
+      "Time series: timestamp vs vibration_mms",
+      "Pie chart: fault_category distribution",
+      "Bar chart: risk_level counts by date",
+      "Line chart: temperature trends over time",
+      "Table: filtered by requires_immediate_action = 1"
+    ]
+  }
+}
